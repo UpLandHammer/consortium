@@ -1,0 +1,1 @@
+alter table prestacao modify data_pagamento timestamp null;

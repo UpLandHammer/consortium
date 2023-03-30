@@ -1,4 +1,4 @@
-package br.com.uplandhammer.consortium.http.response;
+package br.com.uplandhammer.consortium.http.domain.response;
 
 import lombok.Builder;
 import lombok.Getter;

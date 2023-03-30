@@ -1,4 +1,4 @@
-package br.com.uplandhammer.consortium.usecase;
+package br.com.uplandhammer.consortium.usecase.usuario;
 
 import br.com.uplandhammer.consortium.exception.UsuarioException;
 import br.com.uplandhammer.consortium.gateway.entity.Usuario;

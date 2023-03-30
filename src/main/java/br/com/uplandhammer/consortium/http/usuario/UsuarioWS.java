@@ -2,22 +2,24 @@ package br.com.uplandhammer.consortium.http.usuario;
 
 import br.com.uplandhammer.consortium.exception.BindingValidationException;
 import br.com.uplandhammer.consortium.gateway.entity.Usuario;
-import br.com.uplandhammer.consortium.http.mapper.UsuarioMapper;
-import br.com.uplandhammer.consortium.http.request.UsuarioRequest;
-import br.com.uplandhammer.consortium.http.response.UsuarioResponse;
-import br.com.uplandhammer.consortium.usecase.BuscarUsuarioPorId;
-import br.com.uplandhammer.consortium.usecase.GravarUsuario;
+import br.com.uplandhammer.consortium.http.domain.mapper.UsuarioMapper;
+import br.com.uplandhammer.consortium.http.domain.request.UsuarioRequest;
+import br.com.uplandhammer.consortium.http.domain.response.UsuarioResponse;
+import br.com.uplandhammer.consortium.http.utils.UriUtils;
+import br.com.uplandhammer.consortium.usecase.usuario.BuscarUsuarioPorId;
+import br.com.uplandhammer.consortium.usecase.usuario.GravarUsuario;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/usuario")
 @RequiredArgsConstructor
+@RequestMapping("/api/usuario")
 public class UsuarioWS {
 
     private final GravarUsuario gravarUsuario;
@@ -29,7 +31,14 @@ public class UsuarioWS {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> save(@Valid @RequestBody UsuarioRequest usuarioRequest, BindingResult bindingResult) {
+    public ResponseEntity<UsuarioResponse> save(@Valid @RequestBody UsuarioRequest usuarioRequest, BindingResult bindingResult, UriComponentsBuilder uriComponentsBuilder) {
+        throwBeanValidationErrors(bindingResult);
+        Usuario usuario = UsuarioMapper.from(usuarioRequest);
+        UsuarioResponse usuarioCreated = UsuarioMapper.from(gravarUsuario.executar(usuario));
+        return ResponseEntity.created(UriUtils.generateResourceUriLocation(uriComponentsBuilder, "/api/usuario/{id}", usuarioCreated.getId())).body(usuarioCreated);
+    }
+
+    private static void throwBeanValidationErrors(BindingResult bindingResult) {
         List<String> messages = bindingResult
                 .getAllErrors()
                 .stream()
@@ -37,7 +46,5 @@ public class UsuarioWS {
                 .toList();
         if(bindingResult.hasErrors())
             throw new BindingValidationException(messages);
-        Usuario usuario = UsuarioMapper.from(usuarioRequest);
-        return ResponseEntity.ok().body(UsuarioMapper.from(gravarUsuario.executar(usuario)));
     }
 }

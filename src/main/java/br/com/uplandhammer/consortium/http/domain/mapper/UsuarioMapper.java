@@ -1,8 +1,8 @@
-package br.com.uplandhammer.consortium.http.mapper;
+package br.com.uplandhammer.consortium.http.domain.mapper;
 
 import br.com.uplandhammer.consortium.gateway.entity.Usuario;
-import br.com.uplandhammer.consortium.http.request.UsuarioRequest;
-import br.com.uplandhammer.consortium.http.response.UsuarioResponse;
+import br.com.uplandhammer.consortium.http.domain.request.UsuarioRequest;
+import br.com.uplandhammer.consortium.http.domain.response.UsuarioResponse;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
